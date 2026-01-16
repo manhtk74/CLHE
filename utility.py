@@ -14,7 +14,7 @@ class BundleTrainDataset(Dataset):
         self.b_i_pairs = b_i_pairs
         self.b_i_graph = b_i_graph
         self.bundles_map = np.argwhere(self.b_i_graph.sum(axis=1) > 0)[
-            :, 0].reshape(-1)
+            :, 0].reshape(-1) # Bundle with item only
         self.num_bundles = num_bundles
         self.num_items = self.b_i_graph.shape[1]
         self.neg_sample = neg_sample
@@ -37,13 +37,13 @@ class BundleTrainDataset(Dataset):
         self.bundle_augment = conf["bundle_augment"]
 
     def __getitem__(self, index):
-
+        # b_i_graph: [n_bundles, n_items]
         full = torch.from_numpy(
             self.b_i_graph[self.bundles_map[index]].toarray()).squeeze()
-
+        # full: [n_items]
         # multi-hot
         modify = torch.zeros_like(full)
-        indices = torch.argwhere(full)[:, 0]
+        indices = torch.argwhere(full)[:, 0] # Get non-empty bundle item id
 
         # shuffle >>>
         num_items = indices.shape[0]
@@ -57,8 +57,7 @@ class BundleTrainDataset(Dataset):
         if self.conf["bundle_ratio"] > 0 and self.conf["bundle_ratio"] < 1:  # remove items
             if self.bundle_augment == "ID":
                 line = round(len(indices)*self.conf["bundle_ratio"]+0.5)
-                line = line if line < len(indices) else len(
-                    indices)-1  # ensure at less one item is masked
+                line = line if line < len(indices) else len(indices)-1  # ensure at less one item is masked
                 p_indices = indices[:line]
                 modify[p_indices] = 1
 
@@ -67,8 +66,7 @@ class BundleTrainDataset(Dataset):
                     p_indices, (0, self.len_max-len(p_indices)), value=self.num_items)
             elif self.bundle_augment == "IR":
                 line = round(len(indices)*self.conf["bundle_ratio"]+0.5)
-                line = line if line < len(indices) else len(
-                    indices)-1  # ensure at less one item is masked
+                line = line if line < len(indices) else len(indices)-1  # ensure at less one item is masked
                 p_indices = indices[:line]
                 replace_indices = random.sample(
                     range(num_items), len(indices) - line)
@@ -220,7 +218,7 @@ class Datasets():
     def get_ui(self):
         u_i_pairs = list2pairs(os.path.join(self.path, self.name, 'ui_full.txt'))
 
-        indice = np.array(u_i_pairs, dtype=np.int32)
+        indice = np.array(u_i_pairs, dtype=np.int32) # [N, 2]
         values = np.ones(len(u_i_pairs), dtype=np.float32)
         u_i_graph = sp.csr_matrix(
             (values, (indice[:, 0], indice[:, 1])), shape=(self.num_users, self.num_items))
