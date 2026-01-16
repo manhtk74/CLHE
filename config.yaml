@@ -1,5 +1,5 @@
 pog:
-  data_path: './datasets/'
+  data_path: "./datasets/"
   batch_size_train: 256 # the batch size for training
   batch_size_test: 1024 # the batch size for testing
   topk: [5, 10, 20, 40, 80] # the topks metrics for evaluation
@@ -12,7 +12,7 @@ pog:
   test_interval: 2 # by how many epochs to run the validation and testing.
 
 pog_dense:
-  data_path: './datasets/'
+  data_path: "./datasets/"
   batch_size_train: 256 # the batch size for training
   batch_size_test: 1024 # the batch size for testing
   topk: [5, 10, 20, 40, 80] # the topks metrics for evaluation
@@ -25,9 +25,9 @@ pog_dense:
   test_interval: 2 # by how many epochs to run the validation and testing.
 
 spotify:
-  data_path: './datasets/'
-  batch_size_train: 256 # the batch size for training
-  batch_size_test: 256 # the batch size for testing
+  data_path: "./datasets/"
+  batch_size_train: 2048 # the batch size for training
+  batch_size_test: 1024 # the batch size for testing
   topk: [10, 20, 40, 80] # the topks metrics for evaluation
   neg_num: 1 # number of negatives used for BPR loss. All the experiments use 1.
   embedding_sizes: [64] # the embedding size for user, bundle, and item
@@ -38,7 +38,7 @@ spotify:
   test_interval: 2 # by how many epochs to run the validation and testing.
 
 spotify_sparse:
-  data_path: './datasets/'
+  data_path: "./datasets/"
   batch_size_train: 256 # the batch size for training
   batch_size_test: 256 # the batch size for testing
   topk: [10, 20, 40, 80] # the topks metrics for evaluation
@@ -49,4 +49,3 @@ spotify_sparse:
   l2_regs: [1.0e-5] # the l2 regularization weight: lambda_2
   epochs: 100 # number of epochs to train # default: 100
   test_interval: 2 # by how many epochs to run the validation and testing.
-  
